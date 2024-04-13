@@ -1,10 +1,10 @@
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, jwt_required
 from .models import User, db
 
-auth = Blueprint('auth', __name__)
+api = Blueprint('api', __name__)
 
-@auth.route('/signup', methods=['POST'])
+@api.route('/auth/signup', methods=['POST'])
 def signup():
     data = request.json
 
@@ -27,7 +27,7 @@ def signup():
     return jsonify({'message': 'User created successfully'}), 201
 
 
-@auth.route('/login', methods=['POST'])
+@api.route('/auth/login', methods=['POST'])
 def login():
     data = request.json
 
@@ -38,3 +38,31 @@ def login():
 
     token = create_access_token(identity=user.id)
     return jsonify({'token': token}), 200
+
+
+@api.route('tasks', methods=['GET'])
+@jwt_required()
+def get_tasks():
+    # TODO: Implement this
+    return jsonify({'message': 'Task list'}), 200
+
+
+@api.route('tasks', methods=['POST'])
+@jwt_required()
+def create_task():
+    # TODO: Implement this
+    return jsonify({'message': 'Task created successfully'}), 201
+
+
+@api.route('tasks/<int:id>', methods=['GET'])
+@jwt_required()
+def get_task(id):
+    # TODO: Implement this
+    return jsonify({'message': 'Task details'}), 200
+
+
+@api.route('tasks/<int:id>', methods=['DELETE'])
+@jwt_required()
+def delete_task(id):
+    # TODO: Implement this
+    return jsonify({'message': 'Task deleted successfully'}), 200

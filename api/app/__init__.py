@@ -13,7 +13,11 @@ def create_app():
     db.init_app(app)
     jwt.init_app(app)
 
-    from .routes import auth
-    app.register_blueprint(auth, url_prefix='/auth')
+    from .routes import api
+    app.register_blueprint(api, url_prefix='/api')
+
+    from .models import User
+    with app.app_context():
+        db.create_all()
 
     return app
