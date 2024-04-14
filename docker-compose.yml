@@ -1,6 +1,7 @@
 version: '3.10'
 services:
   nginx:
+    container_name: api-gateway
     image: nginx:latest
     ports:
       - "80:80"
@@ -12,10 +13,36 @@ services:
   api:
     build: ./api
     container_name: backend
-    depends_on:
-      - db
     environment:
-      - DATABASE_URL=postgresql://user:password@db/videodb
+      SECRET_KEY: my-secret-key
+      JWT_SECRET_KEY: my-jwt-secret-key
+      BROKER_URL: redis://redis:6379/0
+      DATABASE_URL: postgresql://user:password@db/videodb
+    depends_on:
+      - worker
+
+  worker:
+    build: ./worker
+    container_name: worker
+    environment:
+      BROKER_URL: redis://redis:6379/0
+      DATABASE_URL: postgresql://user:password@db/videodb
+    depends_on:
+      redis:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+
+  redis:
+    container_name: broker
+    image: redis:alpine
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "6379:6379"
 
   db:
     container_name: database
@@ -24,6 +51,11 @@ services:
       POSTGRES_DB: videodb
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:

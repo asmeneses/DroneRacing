@@ -7,3 +7,5 @@ marshmallow-sqlalchemy
 redis
 flask-jwt-extended
 gunicorn
+celery
+psycopg2

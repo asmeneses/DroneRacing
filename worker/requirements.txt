@@ -1,0 +1,6 @@
+redis
+celery
+Flask-SQLAlchemy
+SQLAlchemy
+marshmallow-sqlalchemy
+psycopg2

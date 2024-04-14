@@ -1,23 +1,17 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
-from config import Config
+import os
 
-db = SQLAlchemy()
 jwt = JWTManager()
 
 def create_app():
     app = Flask(__name__)
-    app.config.from_object(Config)
+    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+    app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
 
-    db.init_app(app)
     jwt.init_app(app)
 
     from .routes import api
     app.register_blueprint(api, url_prefix='/api')
-
-    from .models import User
-    with app.app_context():
-        db.create_all()
 
     return app
