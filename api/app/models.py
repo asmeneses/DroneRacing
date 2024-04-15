@@ -36,6 +36,9 @@ class Video(Base):
     filename        = Column(String, nullable=False)
     status          = Column(Enum(Status), default=Status.UPLOADING)
 
+    def json(self):
+        return {"id": self.id, "filename": self.filename, "status": self.status.__str__()}
+
 engine = create_engine(os.getenv('DATABASE_URL'))
 Base.metadata.create_all(engine)
 
