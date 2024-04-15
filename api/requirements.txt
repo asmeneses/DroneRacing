@@ -1,0 +1,14 @@
+Flask
+flask-marshmallow
+Flask-RESTful
+Flask-SQLAlchemy
+SQLAlchemy
+marshmallow-sqlalchemy
+redis
+flask-jwt-extended
+gunicorn
+celery
+psycopg2
+google-cloud-storage
+oauth2client
+httplib2
