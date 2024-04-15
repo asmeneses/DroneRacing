@@ -11,7 +11,7 @@ def edit_video(video_path, image_path, output_path):
     final_clip = CompositeVideoClip([video_clip, image_clip, image_clip2])
     
     # Crop the final clip to have a 16:9 aspect ratio
-    final_clip = final_clip.resize(width=video_clip.size[0], height=video_clip.size[0] * 9 / 16)
+    # final_clip = final_clip.resize(width=video_clip.size[0], height=video_clip.size[0] * 9 / 16)
     
     # Write the final clip to a file
     final_clip.write_videofile(output_path, fps=24, codec='libx264')
