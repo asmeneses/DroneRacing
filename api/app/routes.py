@@ -107,7 +107,6 @@ def get_tasks():
     except Exception as e:
         return jsonify({'message': f'{e}'}), 500
 
-
 @api.route('tasks', methods=['POST'])
 @jwt_required()
 def create_task():

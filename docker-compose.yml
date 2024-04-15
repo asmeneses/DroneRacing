@@ -17,7 +17,7 @@ services:
       SECRET_KEY: my-secret-key
       JWT_SECRET_KEY: my-jwt-secret-key
       BROKER_URL: redis://redis:6379/0
-      DATABASE_URL: postgresql://user:password@db/videodb
+      DATABASE_URL: postgresql://postgres:postgres@db/postgres
       GOOGLE_APPLICATION_CREDENTIALS: gcp_key.json
     depends_on:
       - worker
@@ -27,7 +27,7 @@ services:
     container_name: worker
     environment:
       BROKER_URL: redis://redis:6379/0
-      DATABASE_URL: postgresql://user:password@db/videodb
+      DATABASE_URL: postgresql://postgres:postgres@db/postgres
       GOOGLE_APPLICATION_CREDENTIALS: gcp_key.json
     depends_on:
       redis:
@@ -50,9 +50,9 @@ services:
     container_name: database
     image: postgres:13
     environment:
-      POSTGRES_DB: videodb
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U user"]
       interval: 10s

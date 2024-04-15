@@ -14,4 +14,6 @@ def create_app():
     from .routes import api
     app.register_blueprint(api, url_prefix='/api')
 
+    from .models import User, Status, Video
+
     return app
