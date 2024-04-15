@@ -16,9 +16,22 @@ celery = Celery('tasks' , broker=os.getenv('BROKER_URL'))
 def signup():
     data = request.json
 
+    if 'username' not in data:
+        return jsonify({'message': 'Username is required'}), 400
+
+    if 'email' not in data:
+        return jsonify({'message': 'Email is required'}), 400
+
+    if 'password1' not in data:
+        return jsonify({'message': 'Password is required'}), 400
+
+    if 'password2' not in data:
+        return jsonify({'message': 'Password confirmation is required'}), 400
+
     username = data['username']
     email    = data['email']
-    password = data['password']
+    password = data['password1']
+    conf_password = data['password2']
 
     db = scoped_session(Session)
 
@@ -27,6 +40,9 @@ def signup():
 
     if db.query(User).filter_by(username=email).first():
         return jsonify({'message': 'Email already exists'}), 409
+
+    if password != conf_password:
+        return jsonify({'message': 'Passwords do not match'}), 400
 
     new_user = User(username=username, email=email)
     new_user.password = password
@@ -39,6 +55,12 @@ def signup():
 @api.route('/auth/login', methods=['POST'])
 def login():
     data = request.json
+
+    if 'username' not in data:
+        return jsonify({'message': 'Username is required'}), 400
+
+    if 'password' not in data:
+        return jsonify({'message': 'Password is required'}), 400
 
     username = data['username']
 
@@ -55,21 +77,21 @@ def login():
 @api.route('tasks', methods=['GET'])
 @jwt_required()
 def get_tasks():
-    try:
-        data = request.json
+    data = request.json
 
-        tasks = []
-        db = scoped_session(Session)
+    tasks = []
+    db = scoped_session(Session)
 
+    if 'max' in data:
         max = data['max']
-        if max is not None:
-            limit = int(max)
-            if limit < 0:
-                limit = 0
-            tasks = db.query(Video).limit(limit).all()
-        else:
-            tasks = db.query(Video).all()
+        limit = int(max)
+        if limit < 0:
+            limit = 0
+        tasks = db.query(Video).limit(limit).all()
+    else:
+        tasks = db.query(Video).all()
 
+    try:
         order = data['order']
         sorted_tasks = []
         if order is not None:
