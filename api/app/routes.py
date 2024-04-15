@@ -53,8 +53,35 @@ def login():
 @api.route('tasks', methods=['GET'])
 @jwt_required()
 def get_tasks():
-    # TODO: Implement this
-    return jsonify({'message': 'Task list'}), 200
+    try:
+        data = request.json
+
+        tasks = []
+        db = scoped_session(Session)
+
+        max = data['max']
+        if max is not None:
+            limit = int(max)
+            if limit < 0:
+                limit = 0
+            tasks = db.query(Video).limit(limit).all()
+        else:
+            tasks = db.query(Video).all()
+
+        order = data['order']
+        sorted_tasks = []
+        if order is not None:
+            numOrder = int(order)
+            if numOrder == 1:
+                sorted_tasks = sorted(tasks, key=lambda x: x.id, reverse=True)
+            else:
+                sorted_tasks = sorted(tasks, key=lambda x: x.id)
+        else:
+            sorted_tasks = sorted(tasks, key=lambda x: x.id)
+
+        return jsonify([t.json() for t in sorted_tasks]), 200
+    except Exception as e:
+        return jsonify({'message': f'{e}'}), 500
 
 @api.route('tasks', methods=['POST'])
 @jwt_required()
@@ -85,15 +112,28 @@ def create_task():
     # return jsonify({'status': 'upload started', 'task_id': task.id, 'video_id': video.id}), 201
     return jsonify({'message': 'Task created successfully'}), 201
 
-
 @api.route('tasks/<int:id>', methods=['GET'])
 @jwt_required()
 def get_task(id):
-    # TODO: Implement this
-    return jsonify({'message': 'Task details'}), 200
+    try:
+        db = scoped_session(Session)
+        task = db.query(Video).filter_by(id=id).first()
+        if task:
+            return jsonify(task.json()), 200
+        return jsonify({'message': 'Task not found'}), 404
+    except Exception as e:
+        return jsonify({'message': f'{e}'}), 500
 
 @api.route('tasks/<int:id>', methods=['DELETE'])
 @jwt_required()
 def delete_task(id):
-    # TODO: Implement this
-    return jsonify({'message': 'Task deleted successfully'}), 200
+    try:
+        db = scoped_session(Session)
+        task = db.query(Video).filter_by(id=id).first()
+        if task:
+            db.delete(task)
+            db.commit()
+            return jsonify({'message': 'Task deleted successfully'}), 200
+        return jsonify({'message': 'Task not found'}), 404
+    except Exception as e:
+        return jsonify({'message': f'{e}'}), 500
