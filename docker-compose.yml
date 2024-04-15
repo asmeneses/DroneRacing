@@ -18,6 +18,7 @@ services:
       JWT_SECRET_KEY: my-jwt-secret-key
       BROKER_URL: redis://redis:6379/0
       DATABASE_URL: postgresql://user:password@db/videodb
+      GOOGLE_APPLICATION_CREDENTIALS: gcp_key.json
     depends_on:
       - worker
 
@@ -27,6 +28,7 @@ services:
     environment:
       BROKER_URL: redis://redis:6379/0
       DATABASE_URL: postgresql://user:password@db/videodb
+      GOOGLE_APPLICATION_CREDENTIALS: gcp_key.json
     depends_on:
       redis:
         condition: service_healthy

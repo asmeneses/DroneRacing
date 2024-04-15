@@ -32,9 +32,9 @@ class Status(StatusEnum):
 
 class Video(Base):
     __tablename__ = 'videos'
-    id            = Column(Integer, primary_key=True)
-    filename      = Column(String, nullable=False)
-    status        = Column(Enum(Status), default=Status.UPLOADING)
+    id              = Column(Integer, primary_key=True)
+    filename        = Column(String, nullable=False)
+    status          = Column(Enum(Status), default=Status.UPLOADING)
 
     def json(self):
         return {"id": self.id, "filename": self.filename, "status": self.status.__str__()}
