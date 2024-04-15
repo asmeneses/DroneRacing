@@ -109,7 +109,8 @@ def create_task():
     
     video = Video(
         filename = file.filename,
-        status = Status.UPLOADED
+        status = Status.UPLOADED,
+        bucket_filename = buket_filename
     )
 
     db = scoped_session(Session)
@@ -117,7 +118,7 @@ def create_task():
     db.add(video)
     db.commit()
 
-    task = celery.send_task(name='upload_video', args=[video.id, buket_filename])
+    task = celery.send_task(name='tasks.upload_video', args=[video.id, buket_filename])
 
     return jsonify({'status': 'upload started', 'task_id': task.id, 'video_id': video.id}), 201
 

@@ -35,6 +35,7 @@ class Video(Base):
     id              = Column(Integer, primary_key=True)
     filename        = Column(String, nullable=False)
     status          = Column(Enum(Status), default=Status.UPLOADING)
+    bucket_filename = Column(String, nullable=False)
 
     def json(self):
         return {"id": self.id, "filename": self.filename, "status": self.status.__str__()}
