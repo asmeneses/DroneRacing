@@ -2,6 +2,8 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import create_access_token, jwt_required
 from celery import Celery
 from sqlalchemy.orm import scoped_session
+from .gcs_manager import upload_to_gcs
+import uuid
 import os
 
 from .models import Status, User, Video
@@ -56,24 +58,31 @@ def get_tasks():
     # TODO: Implement this
     return jsonify({'message': 'Task list'}), 200
 
+
 @api.route('tasks', methods=['POST'])
 @jwt_required()
 def create_task():
-    key = 'fileName'
+    # Check if the request contains a file
+    if 'file' not in request.files:
+        return 'No file part in the request', 400
 
-    if key not in request.files:
-        return jsonify({'message': 'No file part'}), 400
-
-    file = request.files[key]
+    file = request.files['file']
+    
+    # Check if file is empty
     if file.filename == '':
-        return jsonify({'error': 'No selected file'}), 400
+        return 'No selected file', 400
 
-    if file.filename.endswith('.mp4') is False:
-        return jsonify({'error': 'Invalid file format. Use .mp4 files'}), 400
+    # Check if file is an mp4 video
+    if not file.filename.endswith('.mp4'):
+        return 'Uploaded file is not an MP4 video', 400
+    
+    buket_filename = str(uuid.uuid4()) + ".mp4"
 
+    upload_to_gcs(buket_filename, file)
+    
     video = Video(
         filename = file.filename,
-        status = Status.UPLOADING
+        status = Status.UPLOADED
     )
 
     db = scoped_session(Session)
@@ -81,9 +90,9 @@ def create_task():
     db.add(video)
     db.commit()
 
-    # task = celery.send_task(name='upload_video', args=[video_path, video.id])
-    # return jsonify({'status': 'upload started', 'task_id': task.id, 'video_id': video.id}), 201
-    return jsonify({'message': 'Task created successfully'}), 201
+    task = celery.send_task(name='upload_video', args=[video.id, buket_filename])
+
+    return jsonify({'status': 'upload started', 'task_id': task.id, 'video_id': video.id}), 201
 
 
 @api.route('tasks/<int:id>', methods=['GET'])
