@@ -38,7 +38,7 @@ class Video(Base):
     bucket_filename = Column(String, nullable=False)
 
     def json(self):
-        return {"id": self.id, "filename": self.filename, "status": self.status.__str__()}
+        return {"id": self.id, "filename": self.filename, "status": self.status.__str__(), "bucket_filename": self.bucket_filename}
 
 engine = create_engine(os.getenv('DATABASE_URL'))
 Base.metadata.create_all(engine)

@@ -1,4 +1,3 @@
-version: '3.10'
 services:
   nginx:
     container_name: api-gateway
@@ -19,6 +18,11 @@ services:
       BROKER_URL: redis://redis:6379/0
       DATABASE_URL: postgresql://postgres:postgres@db/postgres
       GOOGLE_APPLICATION_CREDENTIALS: gcp_key.json
+    healthcheck:
+      test: ["CMD-SHELL", "gunicorn", "--bind", "0.0.0.0:5000", "run:app"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     depends_on:
       - worker
 

@@ -9,7 +9,6 @@ import os
 from models import Session, Video, Status
 
 app = Celery('tasks' , broker=os.getenv('BROKER_URL'))
-# app.config_from_object('celeryconfig')
 
 @app.task(bind=True)
 def upload_video(self, video_id, buket_filename):
