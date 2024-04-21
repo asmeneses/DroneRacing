@@ -1,0 +1,13 @@
+services:
+  worker:
+    build: .
+    networks:
+      - mi-red
+    environment:
+      BROKER_URL: redis://redis:6379/0
+      DATABASE_URL: postgresql://postgres:postgres@db/postgres
+      GOOGLE_APPLICATION_CREDENTIALS: gcp_key.json
+
+networks:
+  mi-red:
+    external: true

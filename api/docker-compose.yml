@@ -1,0 +1,17 @@
+services:
+  web-server:
+    build: .
+    ports:
+      - "5002:5002"
+    networks:
+      - mi-red
+    environment:
+      SECRET_KEY: my-secret-key
+      JWT_SECRET_KEY: my-jwt-secret-key
+      BROKER_URL: redis://redis:6379/0
+      DATABASE_URL: postgresql://postgres:postgres@db/postgres
+      GOOGLE_APPLICATION_CREDENTIALS: gcp_key.json
+
+networks:
+  mi-red:
+    external: true

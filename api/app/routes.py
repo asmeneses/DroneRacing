@@ -115,7 +115,7 @@ def create_task():
         return 'No file part in the request', 400
 
     file = request.files['file']
-    
+
     # Check if file is empty
     if file.filename == '':
         return 'No selected file', 400
@@ -123,11 +123,11 @@ def create_task():
     # Check if file is an mp4 video
     if not file.filename.endswith('.mp4'):
         return 'Uploaded file is not an MP4 video', 400
-    
+
     buket_filename = str(uuid.uuid4()) + ".mp4"
 
     upload_to_gcs(buket_filename, file)
-    
+
     video = Video(
         filename = file.filename,
         status = Status.UPLOADED,
