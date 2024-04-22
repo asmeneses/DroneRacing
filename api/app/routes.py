@@ -128,7 +128,7 @@ def create_task():
 
     # upload_to_gcs(buket_filename, file)
 
-    file.save("~/shared-folder/" + buket_filename)
+    file.save(os.path.join("~/shared-folder/", buket_filename))
 
     video = Video(
         filename = file.filename,
