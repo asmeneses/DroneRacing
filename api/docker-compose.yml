@@ -5,6 +5,8 @@ services:
       - "80:5002"
     networks:
       - mi-red
+    volumes:
+      - /home/andersenpiano/shared-folder:/app/datos
     environment:
       SECRET_KEY: my-secret-key
       JWT_SECRET_KEY: my-jwt-secret-key
