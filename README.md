@@ -6,5 +6,5 @@
 3. Run <code>docker-compose build --no-cache</code>
 4. Run <code>docker-compose up -d</code>
 
-# Video sustentación: entrega 3
+# Video sustentación: entrega 2
 [Link al video](https://youtu.be/fTSF8iFvVgA)
