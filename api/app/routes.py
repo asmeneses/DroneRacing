@@ -126,7 +126,9 @@ def create_task():
 
     buket_filename = str(uuid.uuid4()) + ".mp4"
 
-    upload_to_gcs(buket_filename, file)
+    # upload_to_gcs(buket_filename, file)
+
+    file.save("../../shared-folder" + buket_filename)
 
     video = Video(
         filename = file.filename,
