@@ -32,7 +32,7 @@ def upload_video(self, video_id, buket_filename):
 
         file_name = "../../shared-folder/" + buket_filename
         new_name = "edited_" + buket_filename
-        file_name2 = '../.. /shared-folder/' + new_name  # Change this path as needed
+        file_name2 = '../../shared-folder/' + new_name  # Change this path as needed
         edit_video(file_name, logo_path , file_name2)
         print("Edited")
         
