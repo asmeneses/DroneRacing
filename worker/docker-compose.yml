@@ -4,8 +4,8 @@ services:
     networks:
       - mi-red
     environment:
-      BROKER_URL: redis://redis:6379/0
-      DATABASE_URL: postgresql://postgres:postgres@db/postgres
+      BROKER_URL: redis://10.128.0.13:6379/0
+      DATABASE_URL: postgresql://postgres:postgres@10.128.0.13/postgres
       GOOGLE_APPLICATION_CREDENTIALS: gcp_key.json
 
 networks:
