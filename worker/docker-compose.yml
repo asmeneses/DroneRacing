@@ -3,6 +3,8 @@ services:
     build: .
     networks:
       - mi-red
+    volumes:
+      - /home/andersenpiano/shared-folder:/app/datos
     environment:
       BROKER_URL: redis://10.128.0.13:6379/0
       DATABASE_URL: postgresql://postgres:postgres@10.128.0.13/postgres
