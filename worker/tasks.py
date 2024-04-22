@@ -30,9 +30,9 @@ def upload_video(self, video_id, buket_filename):
         # source_blob.download_to_filename(temp_file_name)
         # print("Downloaded")
 
-        file_name = "../../shared-folder/" + buket_filename
+        file_name = "~/shared-folder/" + buket_filename
         new_name = "edited_" + buket_filename
-        file_name2 = '../../shared-folder/' + new_name  # Change this path as needed
+        file_name2 = '~/shared-folder/' + new_name  # Change this path as needed
         edit_video(file_name, logo_path , file_name2)
         print("Edited")
         
