@@ -126,9 +126,9 @@ def create_task():
 
     buket_filename = str(uuid.uuid4()) + ".mp4"
 
-    # upload_to_gcs(buket_filename, file)
+    upload_to_gcs(buket_filename, file)
 
-    file.save(os.path.join("/app/datos/", buket_filename))
+    # file.save(os.path.join("/app/datos/", buket_filename))
 
     video = Video(
         filename = file.filename,

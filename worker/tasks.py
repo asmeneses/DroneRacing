@@ -25,22 +25,23 @@ def upload_video(self, video_id, buket_filename):
         source_blob = source_bucket.blob(buket_filename)
 
 
-        # # Create a temporary local file to download the video
-        # temp_file_name = '/tmp/' + buket_filename  # Change this path as needed
-        # source_blob.download_to_filename(temp_file_name)
-        # print("Downloaded")
+        # Create a temporary local file to download the video
+        temp_file_name = '/tmp/' + buket_filename  # Change this path as needed
+        temp_file_name2 = '/tmp/' + buket_filename + "-edited"  # Change this path as needed
+        source_blob.download_to_filename(temp_file_name)
+        print("Downloaded")
 
-        file_name = os.path.join("/app/datos/", buket_filename)
-        new_name = "edited_" + buket_filename
-        file_name2 = os.path.join("/app/datos/", new_name) # Change this path as needed
-        edit_video(file_name, logo_path , file_name2)
+        # file_name = os.path.join("/app/datos/", buket_filename)
+        # new_name = "edited_" + buket_filename
+        # file_name2 = os.path.join("/app/datos/", new_name) # Change this path as needed
+        edit_video(temp_file_name, logo_path , temp_file_name2)
         print("Edited")
         
         # Upload the video with a different name
-        # destination_bucket = client.bucket("test-buket-videos")  # You can change the destination bucket if needed
-        # destination_blob = destination_bucket.blob(buket_filename)
-        # destination_blob.upload_from_filename(temp_file_name2)
-        # print("Uploaded")
+        destination_bucket = client.bucket("test-buket-videos")  # You can change the destination bucket if needed
+        destination_blob = destination_bucket.blob(buket_filename)
+        destination_blob.upload_from_filename(temp_file_name2)
+        print("Uploaded")
 
         video.status = Status.CONVERTED
         db.commit()
