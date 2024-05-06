@@ -11,4 +11,3 @@
 
 # Videos sustentación: entrega 3
 - [Arquitectura en GCP](https://youtu.be/0MsoNKgTkik)
-- [Pruebas de estrés JMETER]
