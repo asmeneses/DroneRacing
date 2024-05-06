@@ -12,6 +12,11 @@ from .models import Session
 api = Blueprint('api', __name__)
 celery = Celery('tasks' , broker=os.getenv('BROKER_URL'))
 
+@api.route('/')
+def index():
+    return jsonify({'message': 'Welcome to the API'}), 200
+
+
 @api.route('/auth/signup', methods=['POST'])
 def signup():
     data = request.json
