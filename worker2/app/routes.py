@@ -1,20 +1,46 @@
-from celery import Celery
-from datetime import datetime
+from flask import Blueprint, request, jsonify
 from sqlalchemy.orm import scoped_session
+import json
+import base64
 from google.cloud import storage
-from google.oauth2 import service_account
-from video_proc import edit_video
-import os
+from .video_proc import edit_video
 
-from models import Session, Video, Status
+from .models import Status, Video
+from .models import Session
 
-app = Celery('tasks' , broker=os.getenv('BROKER_URL'))
+worker = Blueprint('worker', __name__)
 
-@app.task(bind=True)
-def upload_video(self, video_id, buket_filename):
+@worker.route('/')
+def index():
+    return jsonify({'message': 'Welcome to the Worker API'}), 200
+
+@worker.route('process', methods=['POST'])
+def process_video():
+
+    data = request.get_json()
+
+    if "message" not in data:
+        return jsonify({"error": "Invalid request"}), 400
+    
+    message = data["message"]
+    
+    message_data = message.get('data', None)
+
+    if not message_data:
+        return jsonify({"error": "No message data received"}), 400
+    
+    message_data_decoded = base64.b64decode(message_data).decode("utf-8")
+
+    message_data_dict = json.loads(message_data_decoded)
+
+    video_id = message_data_dict["videoId"]
+    buket_filename = message_data_dict["buketFilename"]
+
     db = scoped_session(Session)
     logo_path = "./assets/logo.png"
     print("INIT")
+
+
     try:
         video = db.query(Video).filter_by(id=video_id).first()
         client = storage.Client()
@@ -46,9 +72,11 @@ def upload_video(self, video_id, buket_filename):
         video.status = Status.CONVERTED
         db.commit()
         print("Commit")
+
+
     except Exception as e:
         print(e)
         db.rollback()
+        return jsonify({"error": "Unable to process video"}), 500
 
-
-    return f"Video {buket_filename} processed"
+    return jsonify({'status': 'video processed', 'video_id': video.id}), 201

@@ -5,6 +5,8 @@ from sqlalchemy.orm import scoped_session
 from .gcs_manager import upload_to_gcs
 import uuid
 import os
+import json
+from pubsub_manager import publish_message
 
 from .models import Status, User, Video
 from .models import Session
@@ -133,8 +135,6 @@ def create_task():
 
     upload_to_gcs(buket_filename, file)
 
-    # file.save(os.path.join("/app/datos/", buket_filename))
-
     video = Video(
         filename = file.filename,
         status = Status.UPLOADED,
@@ -146,7 +146,11 @@ def create_task():
     db.add(video)
     db.commit()
 
-    task = celery.send_task(name='tasks.upload_video', args=[video.id, buket_filename])
+    message = json.dumps({"videoId": video.id, "buketFilename": buket_filename})
+    project_id = "soluciones-cloud-420918"
+    topic_id = "videos_queue"
+
+    publish_message(project_id, topic_id, message)
 
     return jsonify({'status': 'upload started', 'task_id': task.id, 'video_id': video.id}), 201
 
