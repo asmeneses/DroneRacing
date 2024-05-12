@@ -14,7 +14,7 @@ worker = Blueprint('worker', __name__)
 def index():
     return jsonify({'message': 'Welcome to the Worker API'}), 200
 
-@worker.route('process', methods=['POST'])
+@worker.route('/process', methods=['POST'])
 def process_video():
 
     data = request.get_json()
@@ -40,6 +40,8 @@ def process_video():
     logo_path = "./assets/logo.png"
     print("INIT")
 
+    print(video_id)
+    print(buket_filename)
 
     try:
         video = db.query(Video).filter_by(id=video_id).first()
@@ -53,7 +55,7 @@ def process_video():
 
         # Create a temporary local file to download the video
         temp_file_name = '/tmp/' + buket_filename  # Change this path as needed
-        temp_file_name2 = '/tmp/' + buket_filename + "-edited"  # Change this path as needed
+        temp_file_name2 = '/tmp/' + buket_filename + "-edited.mp4"  # Change this path as needed
         source_blob.download_to_filename(temp_file_name)
         print("Downloaded")
 
@@ -72,7 +74,6 @@ def process_video():
         video.status = Status.CONVERTED
         db.commit()
         print("Commit")
-
 
     except Exception as e:
         print(e)

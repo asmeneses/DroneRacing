@@ -1,0 +1,43 @@
+services:
+  api:
+    build: ./api
+    ports: 
+      - "8080:5002"
+    container_name: backend
+    environment:
+      SECRET_KEY: my-secret-key
+      JWT_SECRET_KEY: my-jwt-secret-key
+      BROKER_URL: redis://redis:6379/0
+      DATABASE_URL: postgresql://postgres:postgres@db/postgres
+      GOOGLE_APPLICATION_CREDENTIALS: gcp_key.json
+    depends_on:
+      db:
+        condition: service_healthy
+  
+  worker:
+    build: ./worker2
+    ports: 
+      - "8081:5003"
+    container_name: worker
+    environment:
+      BROKER_URL: redis://redis:6379/0
+      DATABASE_URL: postgresql://postgres:postgres@db/postgres
+      GOOGLE_APPLICATION_CREDENTIALS: gcp_key.json
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    container_name: database
+    image: postgres:13
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5432:5432"

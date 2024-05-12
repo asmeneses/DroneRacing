@@ -1,18 +1,15 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import create_access_token, jwt_required
-from celery import Celery
 from sqlalchemy.orm import scoped_session
 from .gcs_manager import upload_to_gcs
 import uuid
-import os
 import json
-from pubsub_manager import publish_message
+from .pubsub_manager import publish_message
 
 from .models import Status, User, Video
 from .models import Session
 
 api = Blueprint('api', __name__)
-celery = Celery('tasks' , broker=os.getenv('BROKER_URL'))
 
 @api.route('/')
 def index():
@@ -152,7 +149,7 @@ def create_task():
 
     publish_message(project_id, topic_id, message)
 
-    return jsonify({'status': 'upload started', 'task_id': task.id, 'video_id': video.id}), 201
+    return jsonify({'status': 'upload started', 'video_id': video.id}), 201
 
 @api.route('tasks/<int:id>', methods=['GET'])
 @jwt_required()
