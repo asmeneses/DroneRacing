@@ -1,0 +1,12 @@
+redis
+celery
+Flask-SQLAlchemy
+SQLAlchemy
+marshmallow-sqlalchemy
+psycopg2
+moviepy
+opencv-python
+google-cloud-storage
+google-cloud-pubsub
+oauth2client
+httplib2

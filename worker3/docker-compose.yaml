@@ -1,0 +1,12 @@
+services:
+  worker:
+    build: .
+    networks:
+      - mi-red
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@35.238.75.127/postgres
+      GOOGLE_APPLICATION_CREDENTIALS: gcp_key.json
+
+networks:
+  mi-red:
+    external: true
