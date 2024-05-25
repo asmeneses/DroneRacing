@@ -81,7 +81,7 @@ def login():
 @api.route('tasks', methods=['GET'])
 @jwt_required()
 def get_tasks():
-    data = request.json
+    data = request.args
 
     tasks = []
     db = scoped_session(Session)
