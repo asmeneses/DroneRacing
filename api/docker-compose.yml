@@ -1,6 +1,6 @@
 services:
   web-server:
-    image: adcastaneda2/web-server-api:api-v0.0.2
+    image: adcastaneda2/web-server-api:api-v0.0.3
     build: .
     platform: linux/amd64
     ports:

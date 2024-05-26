@@ -6,6 +6,7 @@ from models import Session, Video, Status
 from sqlalchemy.orm import scoped_session
 from video_proc import edit_video
 import json
+import os
 
 
 # Initialize Flask app
@@ -93,4 +94,4 @@ if __name__ == '__main__':
     listener_thread.start()
 
     # Start Flask app
-    app.run(host='0.0.0.0', port=8080)
+    app.run(debug=True, host='0.0.0.0', port=int(os.environ.get("PORT", 8080)))

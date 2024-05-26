@@ -1,10 +1,10 @@
 services:
   worker:
-    image: adcastaneda2/web-server-api:worker-v0.0.1
+    image: adcastaneda2/web-server-api:worker-v0.0.3
     build: .
+    platform: linux/amd64
     ports:
       - "8080:8080"
-    platform: linux/amd64
     environment:
-      DATABASE_URL: postgresql://postgres:postgres@35.238.75.127/postgres
+      DATABASE_URL: postgresql://postgres:postgres@35.188.46.139/postgres
       GOOGLE_APPLICATION_CREDENTIALS: gcp_key.json
