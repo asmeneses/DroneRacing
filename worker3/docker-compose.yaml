@@ -2,13 +2,9 @@ services:
   worker:
     image: adcastaneda2/web-server-api:worker-v0.0.1
     build: .
-    networks:
-      - mi-red
+    ports:
+      - "8080:8080"
     platform: linux/amd64
     environment:
       DATABASE_URL: postgresql://postgres:postgres@35.238.75.127/postgres
       GOOGLE_APPLICATION_CREDENTIALS: gcp_key.json
-
-networks:
-  mi-red:
-    external: true
