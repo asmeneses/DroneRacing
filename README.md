@@ -6,8 +6,5 @@
 3. Run <code>docker-compose build --no-cache</code>
 4. Run <code>docker-compose up -d</code>
 
-# Video sustentación: entrega 2
-[Link al video](https://youtu.be/fTSF8iFvVgA)
-
-# Videos sustentación: entrega 3
-- [Arquitectura en GCP](https://youtu.be/0MsoNKgTkik)
+# Documentation
+[Wiki](https://github.com/asmeneses/DroneRacing/wiki)
